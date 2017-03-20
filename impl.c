@@ -1,6 +1,23 @@
 #ifndef TRANSPOSE_IMPL
 #define TRANSPOSE_IMPL
 
+void naive_transpose(int *src, int *dst, int w, int h);
+void sse_transpose(int *src, int *dst, int w, int h);
+void sse_prefetch_transpose(int *src, int *dst, int w, int h);
+
+
+typedef void (*fptr_transpose)(int *, int *, int , int );
+#ifdef NAIVE
+fptr_transpose funTranspose = naive_transpose;
+#endif
+#ifdef SSE
+fptr_transpose funTranspose = sse_transpose;
+#endif
+#ifdef SSE_PREFETCH
+fptr_transpose funTranspose = sse_prefetch_transpose;
+#endif
+
+
 void naive_transpose(int *src, int *dst, int w, int h)
 {
     for (int x = 0; x < w; x++)
